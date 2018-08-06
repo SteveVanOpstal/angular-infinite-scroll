@@ -4,6 +4,7 @@
   "license": "GPL-3.0",
   "scripts": {
     "format": "npm run clang-format -- --glob=\"src/**/*.@(ts|js)\" -i",
+    "release:major": "npm run standard-version -- --release-as major && git push --follow-tags",
     "release:minor": "npm run standard-version -- --release-as minor && git push --follow-tags",
     "release:patch": "npm run standard-version && git push --follow-tags",
     "clang-format": "clang-format",
@@ -18,5 +19,9 @@
     "@angular/core": "^6.1.1",
     "rxjs": "^6.2.2",
     "zone.js": "^0.8.26"
+  },
+  "devDependencies": {
+    "clang-format": "^1.2.4",
+    "standard-version": "^4.4.0"
   }
 }
