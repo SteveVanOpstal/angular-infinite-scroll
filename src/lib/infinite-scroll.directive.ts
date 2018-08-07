@@ -36,8 +36,12 @@ export class InfiniteScrollDirective<T> implements OnInit, DoCheck, OnDestroy {
   set infiniteScrollTrackBy(fn: TrackByFunction<T>) {
     this._ngFor.ngForTrackBy = fn;
   }
+  get infiniteScrollTrackBy(): TrackByFunction<T> {
+    return this._ngFor.ngForTrackBy;
+  }
+
   @Input()
-  set ngForTemplate(value: TemplateRef<NgForOfContext<T>>) {
+  set infiniteScrollTemplate(value: TemplateRef<NgForOfContext<T>>) {
     this._ngFor.ngForTemplate = value;
   }
 
@@ -47,10 +51,6 @@ export class InfiniteScrollDirective<T> implements OnInit, DoCheck, OnDestroy {
   set infiniteScrollEnd(obs$: Observable<NgIterable<T>>) {
     this.destroySubscriptions();
     this._subscriptionEnd = this._end$.pipe(exhaustMap(() => obs$)).subscribe(this.newItems, () => this.newItems([]));
-  }
-
-  get ngForTrackBy(): TrackByFunction<T> {
-    return this._ngFor.ngForTrackBy;
   }
 
   ngOnInit() {
