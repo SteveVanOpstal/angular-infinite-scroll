@@ -30,6 +30,7 @@ export class InfiniteScrollDirective<T> implements OnInit, DoCheck, OnDestroy {
   @Input()
   set infiniteScrollOf(infiniteScrollOf: NgIterable<T>) {
     this._items = Array.from(infiniteScrollOf);
+    this._dummies = 0;
     this.updateItems();
   }
   @Input()
@@ -83,20 +84,23 @@ export class InfiniteScrollDirective<T> implements OnInit, DoCheck, OnDestroy {
 
   private update(outside: boolean) {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && this._items) {
-      if (this.position < this._items.length) {
-        if (outside) {
-          this.zone.run(() => {
-            this.updateItems();
-          });
-        } else {
+      if (this._items && (!this._items.length || this._items.every((item) => item === undefined))) {
+        this.addDummies();
+      }
+
+      if (outside) {
+        this.zone.run(() => {
           this.updateItems();
-        }
+        });
+      } else {
+        this.updateItems();
+      }
+
+      if (this.position < this._items.length) {
         this.position += this.interval;
       } else if (this._subscriptionEnd) {
         this._end$.next();
-        this._items = this._items.concat(Array(this.interval).fill(undefined));
-        this._dummies += this.interval;
-        this.updateItems();
+        this.addDummies();
       }
     }
   }
@@ -117,6 +121,11 @@ export class InfiniteScrollDirective<T> implements OnInit, DoCheck, OnDestroy {
 
     // update ngForOf<T> directive
     this._ngFor.ngForOf = this._items.slice(0, this.position);
+  }
+
+  private addDummies() {
+    this._items = this._items.concat(Array(this.interval).fill(undefined));
+    this._dummies += this.interval;
   }
 
   private destroySubscriptions() {
