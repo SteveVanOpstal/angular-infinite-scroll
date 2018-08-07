@@ -44,5 +44,8 @@
       }
     }
   },
-  "defaultProject": "angular-infinite-scroll"
+  "defaultProject": "angular-infinite-scroll",
+  "cli": {
+    "packageManager": "yarn"
+  }
 }
