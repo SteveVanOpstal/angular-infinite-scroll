@@ -4,7 +4,7 @@
   "newProjectRoot": "projects",
   "projects": {
     "angular-infinite-scroll": {
-      "root": "projects/infinite-scroll",
+      "root": "",
       "sourceRoot": "src",
       "projectType": "library",
       "prefix": "lib",
