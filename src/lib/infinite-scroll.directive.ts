@@ -57,7 +57,7 @@ export class InfiniteScrollDirective<T> implements OnInit, DoCheck, OnDestroy {
     this._subscriptionLoading = this._loading$
                                     .pipe(switchMap((loading: boolean) => {
                                       if (loading) {
-                                        return interval(333).pipe(take(1), map(() => true));
+                                        return interval(0).pipe(take(1), map(() => true));
                                       }
                                       return of(false);
                                     }))
