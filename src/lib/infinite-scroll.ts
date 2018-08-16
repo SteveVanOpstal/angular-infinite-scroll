@@ -1,11 +1,12 @@
 import {NgForOf, NgForOfContext} from '@angular/common';
-import {EventEmitter, IterableDiffers, NgIterable, NgZone, OnDestroy, OnInit, TemplateRef, ViewContainerRef, DoCheck} from '@angular/core';
-import {interval, merge, Observable, Subject, Subscription} from 'rxjs';
-import {mergeMap, switchMap, take} from 'rxjs/operators';
+import {DoCheck, IterableDiffers, NgIterable, NgZone, OnDestroy, OnInit, TemplateRef, ViewContainerRef} from '@angular/core';
+import {BehaviorSubject, interval, merge, Observable, Subject, Subscription} from 'rxjs';
+import {exhaustMap, switchMap, take} from 'rxjs/operators';
 
 import {DEFAULTS} from './defaults';
 
 export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
+  private _subscriptionLoading: Subscription;
   private _subscriptionLoadingEnd: Subscription;
   private _userEnd$ = new Observable<NgIterable<T>>();
 
@@ -28,10 +29,10 @@ export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
   step = DEFAULTS.STEP;
   offset = DEFAULTS.OFFSET;
   delay = DEFAULTS.DELAY;
-  loading$ = new EventEmitter();
+  loading$ = new BehaviorSubject<boolean>(false);
 
   ngOnInit() {
-    this._subscriptionLoadingEnd = merge(this._userEnd$, this._updateAfterRender$).subscribe(() => this.loading$.emit(false));
+    this._subscriptionLoadingEnd = merge(this._userEnd$, this._updateAfterRender$).subscribe(() => this.loading$.next(false));
     this._subscriptionUpdateAfterRender =
         this._updateAfterRender$.pipe(switchMap(() => interval(this.delay).pipe(take(1)))).subscribe(() => this._update());
 
@@ -46,12 +47,18 @@ export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
 
   ngOnDestroy() {
     this.destroy(this._subscriptionEnd);
+    this.destroy(this._subscriptionLoading);
     this.destroy(this._subscriptionLoadingEnd);
     this.destroy(this._subscriptionUpdateAfterRender);
   }
 
   protected createNgFor(viewContainer: ViewContainerRef, template: TemplateRef<NgForOfContext<T>>) {
     this._ngFor = new NgForOf<T>(viewContainer, template, this._differs);
+  }
+
+  protected subscribeLoading(loading: (loading: boolean) => void) {
+    this.destroy(this._subscriptionLoading);
+    this._subscriptionLoading = this.loading$.subscribe(loading);
   }
 
   protected subscribeEnd(scrollEnd: (position: number, interval: number) => Observable<NgIterable<T>>) {

@@ -1,5 +1,5 @@
 import {NgForOfContext} from '@angular/common';
-import {AfterContentInit, Component, EventEmitter, Input, IterableDiffers, NgIterable, NgZone, Output, ViewChild, ViewContainerRef} from '@angular/core';
+import {AfterContentInit, Component, Input, IterableDiffers, NgIterable, NgZone, ViewChild, ViewContainerRef} from '@angular/core';
 import {ContentChild, ContentChildren, Directive, QueryList, TemplateRef} from '@angular/core';
 import {Observable} from 'rxjs';
 
@@ -44,11 +44,14 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
   @Input() step;
   @Input() offset;
   @Input() delay;
-  @Output('loading') loading$ = new EventEmitter();
+  @Input()
+  set loading(loading: (loading: boolean) => void) {
+    this.subscribeLoading(loading);
+  }
   @Input()
   set end(_scrollEnd: (position: number, interval: number) => Observable<NgIterable<T>>) {
-    // super.subscribeEnd(scrollEnd);
-    throw new Error("Method not implemented.");
+    // this.subscribeEnd(scrollEnd);
+    throw new Error('Method not implemented.');
   }
 
   ngAfterContentInit() {
@@ -61,7 +64,7 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
 
   protected update() {
     if (this._itemsStatic && this.position < this._itemsStatic.length) {
-      this.loading$.emit(true);
+      this.loading$.next(true);
       this._updateAfterRender$.next();
       this.updateItems();
       this.position += this.step;
@@ -69,7 +72,7 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
   }
 
   protected newItems(_newItems: NgIterable<T>) {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   private updateItems() {

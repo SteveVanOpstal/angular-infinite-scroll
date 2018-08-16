@@ -1,5 +1,5 @@
 import {NgForOfContext} from '@angular/common';
-import {Directive, EventEmitter, Input, IterableDiffers, NgIterable, OnDestroy, OnInit, Output} from '@angular/core';
+import {Directive, Input, IterableDiffers, NgIterable, OnDestroy, OnInit} from '@angular/core';
 import {NgZone, TemplateRef, TrackByFunction, ViewContainerRef} from '@angular/core';
 import {Observable} from 'rxjs';
 import {DEFAULTS} from './defaults';
@@ -40,10 +40,13 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
   @Input('infiniteScrollStep') step = DEFAULTS.STEP;
   @Input('infiniteScrollOffset') offset = DEFAULTS.OFFSET;
   @Input('infiniteScrollDelay') delay = DEFAULTS.DELAY;
-  @Output('infiniteScrollLoading') loading$ = new EventEmitter();
+  @Input()
+  set infiniteScrollLoading(loading: (loading: boolean) => void) {
+    this.subscribeLoading(loading);
+  }
   @Input()
   set infiniteScrollEnd(scrollEnd: (position: number, interval: number) => Observable<NgIterable<T>>) {
-    super.subscribeEnd(scrollEnd);
+    this.subscribeEnd(scrollEnd);
   }
 
   // ngDoCheck() {
@@ -70,12 +73,12 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
     }
 
     if (this.position < this._items.length - this._dummies) {
-      this.loading$.emit(true);
+      this.loading$.next(true);
       this.updateItems();
       this._updateAfterRender$.next();
       this.position += this.step;
     } else if (this._subscriptionEnd) {
-      this.loading$.emit(true);
+      this.loading$.next(true);
       this._end$.next();
       this._updateAfterRender$.next();
       this.addDummies();
