@@ -71,7 +71,6 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
     } else if (this._subscriptionEnd) {
       this.loading$.next(true);
       this._end$.next();
-      this._updateAfterRender$.next();
       this.addDummies();
       this.updateItems();
       this.position += this.step;
@@ -87,6 +86,7 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
     }
     this._items = this._items.concat(Array.from(newItems));
     this.updateItems();
+    this._updateAfterRender$.next()
   }
 
 

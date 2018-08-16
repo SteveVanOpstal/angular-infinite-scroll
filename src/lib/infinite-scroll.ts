@@ -63,7 +63,7 @@ export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
 
   protected subscribeEnd(scrollEnd: (position: number, interval: number) => Observable<NgIterable<T>>) {
     this.destroy(this._subscriptionEnd);
-    this._userEnd$ = this._end$.pipe(mergeMap(() => scrollEnd(this.position, this.step)));
+    this._userEnd$ = this._end$.pipe(exhaustMap(() => scrollEnd(this.position, this.step)));
     this._subscriptionEnd = this._userEnd$.subscribe(this.newItems.bind(this), () => this.newItems.bind(this)([]));
   }
 
