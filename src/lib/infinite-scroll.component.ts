@@ -63,6 +63,10 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
   }
 
   protected update() {
+    if (!this.step) {
+      return;
+    }
+
     if (this._itemsStatic && this.position < this._itemsStatic.length) {
       this.loading$.next(true);
       this._updateAfterRender$.next();

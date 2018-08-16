@@ -49,20 +49,11 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
     this.subscribeEnd(scrollEnd);
   }
 
-  // ngDoCheck() {
-  //   this._ngFor.ngDoCheck();
-  // }
-
-  // private update() {
-  //   const scrollHeight = window.innerHeight + window.scrollY;
-  //   if (scrollHeight >= document.body.offsetHeight - this.offset) {
-  //     this.zone.runOutsideAngular(() => {
-  //       this.updateDynamic();
-  //     });
-  //   }
-  // }
-
   protected update() {
+    if (!this.step) {
+      return;
+    }
+
     if (!this._items) {
       this._items = [];
     }
