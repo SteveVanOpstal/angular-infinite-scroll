@@ -82,7 +82,7 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
   private updateItems() {
     this.zone.run(() => {
       for (const index in this._itemsStatic) {
-        this._itemsStatic[index].enabled = this.position >= index;
+        this._itemsStatic[index].enabled = this.position > index;
       }
 
       if (this._items && this._ngFor) {
