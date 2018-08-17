@@ -8,4 +8,6 @@ describe('Directive', () => {
   TestSpecs.testFillsPage(page);
 
   TestSpecs.testStepZero(page);
+
+  TestSpecs.testInitialPosition(page);
 });

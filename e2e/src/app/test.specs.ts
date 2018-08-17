@@ -19,4 +19,11 @@ export class TestSpecs {
       browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(of(0).toPromise()));
     });
   }
+
+  static testInitialPosition(page: TestPage) {
+    it('should show initial items at the initial position', () => {
+      page.navigateTo(3, 0);
+      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(of(3).toPromise()));
+    });
+  }
 }
