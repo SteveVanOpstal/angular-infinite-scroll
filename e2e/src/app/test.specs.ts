@@ -9,7 +9,7 @@ export class TestSpecs {
   static testFillsPage(page: TestPage) {
     it('should fill the page with items', () => {
       page.navigateTo(0, 1);
-      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(page.expectedItemCount(100)));
+      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(page.expectedItemCount()));
     });
   }
 

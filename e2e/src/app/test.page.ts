@@ -3,11 +3,14 @@ import {combineLatest, from, interval, Observable, of} from 'rxjs';
 import {map, mergeMap, take} from 'rxjs/operators';
 
 export class TestPage {
+  offset = 0;
+
   constructor(private _location: string) {
     this.setBrowserHeight(400);
   }
 
   navigateTo(startCount = 0, step = 1, offset = 0, delay = 0, endDelay = 0) {
+    this.offset = offset;
     let location = this.addParam(this._location, 'startCount', startCount);
     location = this.addParam(location, 'step', step);
     location = this.addParam(location, 'offset', offset);
@@ -17,7 +20,7 @@ export class TestPage {
   }
 
   setBrowserHeight(height: number) {
-    browser.driver.manage().window().setSize(400, height);
+    browser.driver.manage().window().setSize(1200, height);
   }
 
   getCards() {
@@ -33,9 +36,9 @@ export class TestPage {
         .pipe(map((result) => parseInt(<string>result, 10)));
   }
 
-  expectedItemCount(offset: number) {
+  expectedItemCount() {
     return combineLatest(this.getViewportHeight(), this.getCardHeight())
-        .pipe(map(([viewportHeight, height]) => Math.ceil((viewportHeight + offset) / height)))
+        .pipe(map(([viewportHeight, height]) => Math.ceil((viewportHeight + this.offset) / height)))
         .toPromise();
   }
 

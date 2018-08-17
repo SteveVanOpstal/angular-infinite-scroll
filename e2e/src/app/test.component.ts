@@ -21,13 +21,17 @@ export class TestComponent implements OnInit, DoCheck {
       const startCount = parseInt(params['startCount'], 10);
       this.cards = new Array(startCount).fill(1).map((pos, index) => 'start' + (pos + index));
       this.position = startCount;
-    } else if (params['step']) {
+    }
+    if (params['step']) {
       this.step = parseInt(params['step'], 10);
-    } else if (params['offset']) {
+    }
+    if (params['offset']) {
       this.offset = parseInt(params['offset'], 10);
-    } else if (params['delay']) {
+    }
+    if (params['delay']) {
       this.delay = parseInt(params['delay'], 10);
-    } else if (params['endDelay']) {
+    }
+    if (params['endDelay']) {
       this.endDelay = parseInt(params['endDelay'], 10);
     }
   }
