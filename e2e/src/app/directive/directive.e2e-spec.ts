@@ -6,8 +6,7 @@ describe('Directive', () => {
   let page = new DirectivePage();
 
   TestSpecs.testFillsPage(page);
-
   TestSpecs.testStepZero(page);
-
   TestSpecs.testInitialPosition(page);
+  TestSpecs.testEndOnce(page);
 });

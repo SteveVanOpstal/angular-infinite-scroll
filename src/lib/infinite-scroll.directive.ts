@@ -19,9 +19,6 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
   set infiniteScrollOf(infiniteScrollOf: NgIterable<T>) {
     if (infiniteScrollOf) {
       this._items = Array.from(infiniteScrollOf);
-      this.position = this._items.length;
-    } else {
-      this.position = 0;
     }
     this._dummies = 0;
     this.updateItems();
@@ -53,10 +50,6 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
   }
 
   protected update() {
-    if (!this.step) {
-      return;
-    }
-
     if (!this._items) {
       this._items = [];
     }
@@ -89,7 +82,10 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
     }
     this._items = this._items.concat(Array.from(newItems));
     this.updateItems();
-    this._updateAfterRender$.next()
+    // only continue when newItems arrive
+    if (this._items.length) {
+      this._updateAfterRender$.next();
+    }
   }
 
 

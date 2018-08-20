@@ -6,6 +6,6 @@ describe('Component', () => {
   let page = new ComponentPage();
 
   TestSpecs.testFillsPage(page);
-
   TestSpecs.testStepZero(page);
+  TestSpecs.testEndOnce(page);
 });

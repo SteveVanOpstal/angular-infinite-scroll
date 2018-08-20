@@ -63,10 +63,6 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
   }
 
   protected update() {
-    if (!this.step) {
-      return;
-    }
-
     if (this._itemsStatic && this.position < this._itemsStatic.length) {
       this.loading$.next(true);
       this._updateAfterRender$.next();
@@ -82,7 +78,7 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
   private updateItems() {
     this.zone.run(() => {
       for (const index in this._itemsStatic) {
-        this._itemsStatic[index].enabled = this.position > index;
+        this._itemsStatic[index].enabled = this.position >= index;
       }
 
       if (this._items && this._ngFor) {

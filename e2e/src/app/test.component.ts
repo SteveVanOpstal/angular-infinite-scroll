@@ -1,7 +1,7 @@
 import {DoCheck, OnInit} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute} from '@angular/router';
-import {interval, Observable} from 'rxjs';
+import {interval, NEVER, Observable} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 
 export class TestComponent implements OnInit, DoCheck {
@@ -12,6 +12,8 @@ export class TestComponent implements OnInit, DoCheck {
   offset = 100;
   delay = 0;
   endDelay = 200;
+  endIterationCount = 0;
+  endIterations;
 
   constructor(private _snackbar: MatSnackBar, private route: ActivatedRoute) {}
 
@@ -20,7 +22,9 @@ export class TestComponent implements OnInit, DoCheck {
     if (params['startCount']) {
       const startCount = parseInt(params['startCount'], 10);
       this.cards = new Array(startCount).fill(1).map((pos, index) => 'start' + (pos + index));
-      this.position = startCount;
+    }
+    if (params['position']) {
+      this.position = parseInt(params['position'], 10);
     }
     if (params['step']) {
       this.step = parseInt(params['step'], 10);
@@ -33,6 +37,9 @@ export class TestComponent implements OnInit, DoCheck {
     }
     if (params['endDelay']) {
       this.endDelay = parseInt(params['endDelay'], 10);
+    }
+    if (params['endIterations']) {
+      this.endIterations = parseInt(params['endIterations'], 10);
     }
   }
 
@@ -51,6 +58,10 @@ export class TestComponent implements OnInit, DoCheck {
       }
 
   end = (position: number, step: number): Observable<Array<any>> => {
+    if (this.endIterations && this.endIterationCount >= this.endIterations) {
+      return NEVER;
+    }
+    this.endIterationCount++;
     return interval(this.endDelay).pipe(take(1), map(() => new Array(step).fill(position).map((pos, index) => pos + index + 1)));
   }
 }

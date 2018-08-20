@@ -9,13 +9,17 @@ export class TestPage {
     this.setBrowserHeight(400);
   }
 
-  navigateTo(startCount = 0, step = 1, offset = 0, delay = 0, endDelay = 0) {
+  navigateTo(startCount = 0, position = 0, step = 1, offset = 0, delay = 0, endDelay = 0, endIterations = undefined) {
     this.offset = offset;
     let location = this.addParam(this._location, 'startCount', startCount);
+    location = this.addParam(location, 'position', position);
     location = this.addParam(location, 'step', step);
     location = this.addParam(location, 'offset', offset);
     location = this.addParam(location, 'delay', delay);
     location = this.addParam(location, 'endDelay', endDelay);
+    if (endIterations) {
+      location = this.addParam(location, 'endIterations', endIterations);
+    }
     return browser.get(location);
   }
 
