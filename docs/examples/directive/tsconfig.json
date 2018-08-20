@@ -15,17 +15,10 @@
     "typeRoots": [
       "node_modules/@types"
     ],
+    "types": [],
     "lib": [
       "es2017",
       "dom"
-    ],
-    "paths": {
-      "angular-infinite-scroll": [
-        "src/public_api"
-      ],
-      "angular-infinite-scroll/*": [
-        "src/lib/*"
-      ]
-    }
+    ]
   }
 }

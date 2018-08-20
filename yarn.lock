@@ -221,6 +221,10 @@
     semver "^5.3.0"
     semver-intersect "^1.1.2"
 
+"@stackblitz/sdk@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@stackblitz/sdk/-/sdk-1.2.0.tgz#6cac22d7de9f9f92f048f5bb83a7dd8276df2204"
+
 "@types/chance@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/chance/-/chance-1.0.1.tgz#c10703020369602c40dd9428cc6e1437027116df"

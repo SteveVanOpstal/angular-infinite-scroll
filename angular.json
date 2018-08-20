@@ -128,6 +128,99 @@
           }
         }
       }
+    },
+    "angular-infinite-scroll-docs": {
+      "root": "",
+      "sourceRoot": "docs",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/angular-infinite-scroll-docs",
+            "index": "docs/index.html",
+            "main": "docs/main.ts",
+            "polyfills": "docs/polyfills.ts",
+            "tsConfig": "docs/tsconfig.app.json",
+            "assets": [
+              "docs/favicon.ico",
+              "docs/assets",
+              "docs/examples"
+            ],
+            "styles": [
+              "docs/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "docs/environments/environment.ts",
+                  "with": "docs/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "angular-infinite-scroll-docs:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "angular-infinite-scroll-docs:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "angular-infinite-scroll-docs:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "docs/test.ts",
+            "polyfills": "docs/polyfills.ts",
+            "tsConfig": "docs/tsconfig.spec.json",
+            "karmaConfig": "docs/karma.conf.js",
+            "styles": [
+              "docs/styles.scss"
+            ],
+            "scripts": [],
+            "assets": [
+              "docs/favicon.ico",
+              "docs/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "docs/tsconfig.app.json",
+              "docs/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "angular-infinite-scroll",
