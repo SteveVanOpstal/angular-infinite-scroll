@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 
 import {InfiniteScrollModule} from '../../../src/public_api';
@@ -12,6 +12,7 @@ import {CardComponent} from './card/card.component';
 import {ComponentTestComponent} from './component/component.test-component';
 import {DirectiveTemplateTestComponent} from './directive/directive-template.test-component';
 import {DirectiveTestComponent} from './directive/directive.test-component';
+import {StatusComponent} from './status.component';
 
 const ROUTES = [
   {path: 'directive-template', component: DirectiveTemplateTestComponent}, {path: 'directive', component: DirectiveTestComponent},
@@ -19,11 +20,13 @@ const ROUTES = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, CardComponent, DirectiveTestComponent, DirectiveTemplateTestComponent, ComponentTestComponent],
+  declarations:
+      [AppComponent, CardComponent, StatusComponent, DirectiveTestComponent, DirectiveTemplateTestComponent, ComponentTestComponent],
   imports: [
-    BrowserModule, InfiniteScrollModule, RouterModule.forRoot(ROUTES), MatSnackBarModule, BrowserAnimationsModule, MatProgressSpinnerModule
+    BrowserModule, InfiniteScrollModule, RouterModule.forRoot(ROUTES), MatSnackBarModule, NoopAnimationsModule, MatProgressSpinnerModule
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [StatusComponent]
 })
 export class AppModule {
 }

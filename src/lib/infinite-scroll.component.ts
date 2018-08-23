@@ -13,7 +13,6 @@ export class InfiniteStaticMarker<T> {
 
 @Directive({selector: '[infiniteTemplate]'})
 export class InfiniteTemplateMarker<T> {
-  public enabled = false;
   constructor(public template: TemplateRef<NgForOfContext<T>>) {}
 }
 
@@ -25,7 +24,8 @@ export class InfiniteTemplateMarker<T> {
         <ng-container *ngTemplateOutlet="item.template"></ng-container>
       </ng-template>
     </ng-template>
-    <ng-template #dynamic>
+    <ng-template ngFor let-item [ngForOf]="_items">
+      <ng-container *ngTemplateOutlet="templateMarker.template; context: {$implicit: item}"></ng-container>
     </ng-template>`
 })
 export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements AfterContentInit {
@@ -35,6 +35,8 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
 
   _itemsStatic: Array<InfiniteStaticMarker<T>>;
   _items: Array<T>;
+
+  private _dummies = 0;
 
   constructor(differs: IterableDiffers, zone: NgZone) {
     super(differs, zone);
@@ -49,42 +51,75 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
     this.subscribeLoading(loading);
   }
   @Input()
-  set end(_scrollEnd: (position: number, interval: number) => Observable<NgIterable<T>>) {
-    // this.subscribeEnd(scrollEnd);
-    throw new Error('Method not implemented.');
+  set end(scrollEnd: (position: number, interval: number) => Observable<NgIterable<T>>) {
+    this.subscribeEnd(scrollEnd);
   }
 
   ngAfterContentInit() {
     this._itemsStatic = this.staticMarkers.toArray();
-    if (this.templateMarker) {
-      this.createNgFor(this.dynamicTemplate, this.templateMarker.template);
-    }
     this.update();
   }
 
   protected update() {
-    if (this._itemsStatic && this.position < this._itemsStatic.length) {
+    if (!this._items) {
+      this._items = [];
+    }
+
+    if (this._items && (!this._items.length || this._items.every((item) => item === undefined))) {
+      this._items = [];
+      this.addDummies();
+    }
+
+    let staticLength = 0;
+    if (this._itemsStatic) {
+      staticLength = this._itemsStatic.length
+    }
+
+    if (this.position < staticLength) {
       this.loading$.next(true);
       this._updateAfterRender$.next();
       this.updateItems();
       this.position += this.step;
+    } else if (staticLength + this.position < this._items.length - this._dummies) {
+      this.loading$.next(true);
+      this._updateAfterRender$.next();
+      this.position += this.step;
+    } else if (this._subscriptionEnd) {
+      this.loading$.next(true);
+      this._end$.next();
+      this.addDummies();
+      this.position += this.step;
     }
   }
 
-  protected newItems(_newItems: NgIterable<T>) {
-    throw new Error('Method not implemented.');
+  protected newItems(newItems: NgIterable<T>) {
+    while (this._dummies > 0) {
+      if (this._items.length) {
+        this._items.pop();
+      }
+      this._dummies--;
+    }
+    this.zone.run(() => {
+      this._items = this._items.concat(Array.from(newItems));
+    });
+    // only continue when newItems arrive
+    if (this._items.length) {
+      this._updateAfterRender$.next();
+    }
   }
 
   private updateItems() {
     this.zone.run(() => {
       for (const index in this._itemsStatic) {
-        this._itemsStatic[index].enabled = this.position >= index;
+        this._itemsStatic[index].enabled = this.position > index;
       }
+    });
+  }
 
-      if (this._items && this._ngFor) {
-        // update ngForOf<T> directive
-        this._ngFor.ngForOf = this._items.slice(0, this.position);
-      }
+  private addDummies() {
+    this.zone.run(() => {
+      this._items = this._items.concat(Array(this.step).fill(undefined));
+      this._dummies += this.step;
     });
   }
 }

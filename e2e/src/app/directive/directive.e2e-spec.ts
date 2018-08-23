@@ -9,4 +9,6 @@ describe('Directive', () => {
   TestSpecs.testStepZero(page);
   TestSpecs.testInitialPosition(page);
   TestSpecs.testEndOnce(page);
+  TestSpecs.testOffset(page);
+  TestSpecs.testNegativeOffset(page);
 });

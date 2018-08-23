@@ -3,10 +3,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute} from '@angular/router';
 import {interval, NEVER, Observable} from 'rxjs';
 import {map, take} from 'rxjs/operators';
+import {StatusComponent} from './status.component';
 
 export class TestComponent implements OnInit, DoCheck {
   cards;
-  doChecks = 0;
   position = 0;
   step = 1;
   offset = 100;
@@ -14,6 +14,11 @@ export class TestComponent implements OnInit, DoCheck {
   endDelay = 200;
   endIterationCount = 0;
   endIterations;
+
+
+  doChecks = 0;
+  loadingState = false;
+  loadingCycles = 0;
 
   constructor(private _snackbar: MatSnackBar, private route: ActivatedRoute) {}
 
@@ -41,27 +46,39 @@ export class TestComponent implements OnInit, DoCheck {
     if (params['endIterations']) {
       this.endIterations = parseInt(params['endIterations'], 10);
     }
+    if (params['status']) {
+      interval(500).subscribe(()=> this.updateStatus());
+    }
   }
 
   ngDoCheck() {
     this.doChecks++;
-    // this._snackbar.open(this.doChecks.toString());
   }
 
   loading =
       (loading: boolean) => {
-        if (loading) {
-          this._snackbar.open('loading');
-        } else {
-          this._snackbar.dismiss();
+        this.loadingState = loading;
+        if (!loading) {
+          this.loadingCycles++;
         }
       }
 
-  end = (position: number, step: number): Observable<Array<any>> => {
-    if (this.endIterations && this.endIterationCount >= this.endIterations) {
-      return NEVER;
-    }
-    this.endIterationCount++;
-    return interval(this.endDelay).pipe(take(1), map(() => new Array(step).fill(position).map((pos, index) => pos + index + 1)));
+
+  end = (position: number, step: number):
+      Observable<Array<any>> => {
+        if (this.endIterations && this.endIterationCount >= this.endIterations) {
+          return NEVER;
+        }
+        this.endIterationCount++;
+        return interval(this.endDelay).pipe(take(1), map(() => new Array(step).fill(position).map((pos, index) => pos + index + 1)));
+      }
+
+  private updateStatus() {
+    this._snackbar.dismiss();
+    this._snackbar.openFromComponent(StatusComponent, {data: this.status});
+  }
+
+  private get status() {
+    return {loading: this.loadingState, loadingCycles: this.loadingCycles, doChecks: this.doChecks.toString()};
   }
 }

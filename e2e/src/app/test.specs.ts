@@ -33,4 +33,18 @@ export class TestSpecs {
       browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(of(1).toPromise()));
     });
   }
+
+  static testOffset(page: TestPage) {
+    it('should be able to handle offset', () => {
+      page.navigateTo(0, 0, 1, 100);
+      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(page.expectedItemCount()));
+    });
+  }
+
+  static testNegativeOffset(page: TestPage) {
+    it('should be able to handle negative offset', () => {
+      page.navigateTo(0, 0, 1, -100);
+      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(page.expectedItemCount()));
+    });
+  }
 }
