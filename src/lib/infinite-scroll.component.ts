@@ -37,6 +37,7 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
   _items: Array<T>;
 
   private _dummies = 0;
+  private _outOfItems = false;
 
   constructor(differs: IterableDiffers, zone: NgZone) {
     super(differs, zone);
@@ -57,16 +58,19 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
 
   ngAfterContentInit() {
     this._itemsStatic = this.staticMarkers.toArray();
+    this.updateItems();
     this.update();
   }
 
   protected update() {
     if (!this._items) {
       this._items = [];
+      this._dummies = 0;
     }
 
     if (this._items && (!this._items.length || this._items.every((item) => item === undefined))) {
       this._items = [];
+      this._dummies = 0;
       this.addDummies();
     }
 
@@ -99,12 +103,15 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
       }
       this._dummies--;
     }
+    const newItemsArray = Array.from(newItems);
     this.zone.run(() => {
-      this._items = this._items.concat(Array.from(newItems));
+      this._items = this._items.concat(newItemsArray);
     });
     // only continue when newItems arrive
-    if (this._items.length) {
+    if (newItemsArray.length) {
       this._updateAfterRender$.next();
+    } else {
+      this._outOfItems = true;
     }
   }
 
@@ -118,8 +125,10 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
 
   private addDummies() {
     this.zone.run(() => {
-      this._items = this._items.concat(Array(this.step).fill(undefined));
-      this._dummies += this.step;
+      if (!this._dummies && !this._outOfItems) {
+        this._items = this._items.concat(Array(this.step).fill(undefined));
+        this._dummies += this.step;
+      }
     });
   }
 }
