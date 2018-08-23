@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.1.0"></a>
+# 3.1.0 (2018-08-23)
+
+
+### Bug Fixes
+
+* dummies not showing ([6eece5d](https://github.com/SteveVanOpstal/angular-infinite-scroll/commit/6eece5d))
+
+
 <a name="3.0.1"></a>
 # 3.0.1 (2018-08-23)
 
