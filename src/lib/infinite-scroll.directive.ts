@@ -83,10 +83,11 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
       }
       this._dummies--;
     }
-    this._items = this._items.concat(Array.from(newItems));
+    const newItemsArray = Array.from(newItems);
+    this._items = this._items.concat(newItemsArray);
     this.updateItems();
     // only continue when newItems arrive
-    if (this._items.length) {
+    if (newItemsArray.length) {
       this._updateAfterRender$.next();
     }
   }
