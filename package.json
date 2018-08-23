@@ -1,6 +1,6 @@
 {
   "name": "angular-infinite-scroll",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "license": "GPL-3.0",
   "scripts": {
     "format": "npm run clang-format -- --glob=\"@(src|e2e|examples)/**/*.@(ts|js)\" -i",
