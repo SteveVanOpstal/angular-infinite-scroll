@@ -1,27 +1,52 @@
 import {browser, by, element} from 'protractor';
 import {combineLatest, from, interval, Observable, of} from 'rxjs';
 import {map, mergeMap, take} from 'rxjs/operators';
+import {DEFAULTS} from '../../../src/lib/defaults';
 
 export class TestPage {
-  offset = 0;
+  private _offset = DEFAULTS.OFFSET;
+
+  private _locationWithParams = this._location;
 
   constructor(private _location: string) {
     this.setBrowserHeight(400);
   }
 
-  navigateTo(startCount = 0, position = 0, step = 1, offset = 0, delay = 0, endDelay = 0, endIterations = undefined) {
-    this.offset = offset;
-    let location = this.addParam(this._location, 'startCount', startCount);
-    location = this.addParam(location, 'position', position);
-    location = this.addParam(location, 'step', step);
-    location = this.addParam(location, 'offset', offset);
-    location = this.addParam(location, 'delay', delay);
-    location = this.addParam(location, 'endDelay', endDelay);
-    if (endIterations) {
-      location = this.addParam(location, 'endIterations', endIterations);
-    }
+  set startCount(startCount: number) {
+    this._locationWithParams = this.addParam(this._locationWithParams, 'startCount', startCount);
+  }
+
+  set position(position: number) {
+    this._locationWithParams = this.addParam(this._locationWithParams, 'position', position);
+  }
+
+  set step(step: number) {
+    this._locationWithParams = this.addParam(this._locationWithParams, 'step', step);
+  }
+
+  set offset(offset: number) {
+    this._offset = offset;
+    this._locationWithParams = this.addParam(this._locationWithParams, 'offset', offset);
+  }
+
+  set delay(delay: number) {
+    this._locationWithParams = this.addParam(this._locationWithParams, 'delay', delay);
+  }
+
+  set endDelay(endDelay: number) {
+    this._locationWithParams = this.addParam(this._locationWithParams, 'endDelay', endDelay);
+  }
+
+  set endIterations(endIterations: number) {
+    this._locationWithParams = this.addParam(this._locationWithParams, 'endIterations', endIterations);
+  }
+
+  navigateTo() {
+    const location = this._locationWithParams;
+    this._locationWithParams = this._location;
     return browser.get(location);
   }
+
 
   setBrowserHeight(height: number) {
     browser.driver.manage().window().setSize(1200, height);
@@ -40,20 +65,16 @@ export class TestPage {
         .pipe(map((result) => parseInt(<string>result, 10)));
   }
 
-  expectedItemCount() {
+  expectedItemCount(round = 1) {
     return combineLatest(this.getViewportHeight(), this.getCardHeight())
-        .pipe(map(([viewportHeight, height]) => Math.ceil((viewportHeight + this.offset) / height)))
+        .pipe(map(([viewportHeight, height]) => Math.ceil(((viewportHeight + this._offset) / height) / round) * round))
         .toPromise();
   }
 
   ready(count = 0): Observable<boolean> {
-    return interval(2000).pipe(take(1), mergeMap(() => from(this.getCards().count())), mergeMap((currentCount) => {
-                                 if (count === currentCount) {
-                                   return of(true);
-                                 } else {
-                                   return this.ready(currentCount);
-                                 }
-                               }));
+    return interval(2000).pipe(
+        take(1), mergeMap(() => from(this.getCards().count())),
+        mergeMap((currentCount) => count === currentCount ? of(true) : this.ready(currentCount)));
   }
 
   private addParam(location: string, param: string, value: number) {

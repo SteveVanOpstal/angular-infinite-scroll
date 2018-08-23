@@ -7,6 +7,7 @@ describe('Directive', () => {
 
   TestSpecs.testFillsPage(page);
   TestSpecs.testStepZero(page);
+  TestSpecs.testStepFive(page);
   TestSpecs.testInitialPosition(page);
   TestSpecs.testEndOnce(page);
   TestSpecs.testOffset(page);

@@ -1,17 +1,20 @@
 import {DoCheck, OnInit} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute} from '@angular/router';
-import {interval, NEVER, Observable} from 'rxjs';
+import {interval, Observable, of} from 'rxjs';
 import {map, take} from 'rxjs/operators';
+
+import {DEFAULTS} from '../../../src/lib/defaults';
+
 import {StatusComponent} from './status.component';
 
 export class TestComponent implements OnInit, DoCheck {
   cards;
-  position = 0;
-  step = 1;
-  offset = 100;
-  delay = 0;
-  endDelay = 200;
+  position = DEFAULTS.POSITION;
+  step = DEFAULTS.STEP;
+  offset = DEFAULTS.OFFSET;
+  delay = DEFAULTS.DELAY;
+  endDelay = 0;
   endIterationCount = 0;
   endIterations;
 
@@ -66,8 +69,8 @@ export class TestComponent implements OnInit, DoCheck {
 
   end = (position: number, step: number):
       Observable<Array<any>> => {
-        if (this.endIterations && this.endIterationCount >= this.endIterations) {
-          return NEVER;
+        if (this.endIterations !== undefined && this.endIterationCount >= this.endIterations) {
+          return of([]);
         }
         this.endIterationCount++;
         return interval(this.endDelay).pipe(take(1), map(() => new Array(step).fill(position).map((pos, index) => pos + index + 1)));

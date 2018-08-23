@@ -5,7 +5,7 @@ import {ActivatedRoute} from '@angular/router';
 import {TestComponent} from '../test.component';
 
 @Component({
-  template: `  
+  template: `
     <infinite-scroll [position]="position" [step]="step" [delay]="delay" [offset]="offset" [end]="end" [loading]="loading">
       <div *ngFor="let card of cards">
         <e2e-card [card]="'static ' + card" *infiniteStatic></e2e-card>
