@@ -41,10 +41,10 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
 
   @Input('infiniteScrollPosition')
   set position(position) {
-    if(position === undefined || position === null){
+    if (position === undefined || position === null) {
       this._position = DEFAULTS.POSITION;
     } else {
-      this._position = position; 
+      this._position = position;
     }
     this._positionInitial = position;
   }

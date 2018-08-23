@@ -47,7 +47,7 @@ export class TestComponent implements OnInit, DoCheck {
       this.endIterations = parseInt(params['endIterations'], 10);
     }
     if (params['status']) {
-      interval(500).subscribe(()=> this.updateStatus());
+      interval(500).subscribe(() => this.updateStatus());
     }
   }
 
