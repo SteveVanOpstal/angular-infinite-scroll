@@ -9,6 +9,8 @@ import {InfiniteScroll} from './infinite-scroll';
 export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnInit, OnDestroy {
   private _items: Array<T>;
   private _dummies = 0;
+  private _position = DEFAULTS.POSITION;
+  private _positionInitial = DEFAULTS.POSITION;
 
   constructor(viewContainer: ViewContainerRef, templateRef: TemplateRef<NgForOfContext<T>>, differs: IterableDiffers, zone: NgZone) {
     super(differs, zone);
@@ -19,10 +21,8 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
   set infiniteScrollOf(infiniteScrollOf: NgIterable<T>) {
     if (infiniteScrollOf) {
       this._items = Array.from(infiniteScrollOf);
-      this.position = this._items.length;
-    } else {
-      this.position = 0;
     }
+    this._position = this._positionInitial;
     this._dummies = 0;
     this.updateItems();
   }
@@ -39,7 +39,15 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
     this._ngFor.ngForTemplate = value;
   }
 
-  @Input('infiniteScrollPosition') position = DEFAULTS.POSITION;
+  @Input('infiniteScrollPosition')
+  set position(position) {
+    if(position === undefined || position === null){
+      this._position = DEFAULTS.POSITION;
+    } else {
+      this._position = position; 
+    }
+    this._positionInitial = position;
+  }
   @Input('infiniteScrollStep') step = DEFAULTS.STEP;
   @Input('infiniteScrollOffset') offset = DEFAULTS.OFFSET;
   @Input('infiniteScrollDelay') delay = DEFAULTS.DELAY;
@@ -62,17 +70,17 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
       this.addDummies();
     }
 
-    if (this.position < this._items.length - this._dummies) {
+    if (this._position < this._items.length - this._dummies) {
       this.loading$.next(true);
       this.updateItems();
       this._updateAfterRender$.next();
-      this.position += this.step;
+      this._position += this.step;
     } else if (this._subscriptionEnd) {
       this.loading$.next(true);
       this._end$.next();
       this.addDummies();
       this.updateItems();
-      this.position += this.step;
+      this._position += this.step;
     }
   }
 
@@ -97,7 +105,7 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
     this.zone.run(() => {
       if (this._items) {
         // update ngForOf<T> directive
-        this._ngFor.ngForOf = this._items.slice(0, this.position);
+        this._ngFor.ngForOf = this._items.slice(0, this._position);
       }
     });
   }
