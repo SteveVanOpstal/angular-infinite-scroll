@@ -11,7 +11,7 @@
     "e2e:update": "npm run webdriver-manager update",
     "release:major": "npm run standard-version -- --release-as major && git push --follow-tags",
     "release:minor": "npm run standard-version -- --release-as minor && git push --follow-tags",
-    "release:patch": "npm run standard-version && git push --follow-tags",
+    "release:patch": "npm run standard-version -- --release-as patch && git push --follow-tags",
     "clang-format": "clang-format",
     "standard-version": "standard-version",
     "conventional-github-releaser": "conventional-github-releaser",

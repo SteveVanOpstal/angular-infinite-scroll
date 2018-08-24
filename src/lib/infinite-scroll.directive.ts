@@ -26,6 +26,7 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
     this.position = this._positionInitial;
     this._dummies = 0;
     this.updateItems();
+    this.update();
   }
   @Input()
   set infiniteScrollTrackBy(fn: TrackByFunction<T>) {
@@ -69,6 +70,7 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
     if (this._items && (!this._items.length || this._items.every((item) => item === undefined))) {
       this._items = [];
       this.addDummies();
+      this.updateItems();
     }
 
     if (this.position < this._items.length - this._dummies) {

@@ -16,6 +16,10 @@ export class TestPage {
     this._locationWithParams = this.addParam(this._locationWithParams, 'startCount', startCount);
   }
 
+  set resetCount(resetCount: number) {
+    this._locationWithParams = this.addParam(this._locationWithParams, 'resetCount', resetCount);
+  }
+
   set position(position: number) {
     this._locationWithParams = this.addParam(this._locationWithParams, 'position', position);
   }

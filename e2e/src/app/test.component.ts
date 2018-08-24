@@ -29,7 +29,11 @@ export class TestComponent implements OnInit, DoCheck {
     const params = this.route.snapshot.queryParams;
     if (params['startCount']) {
       const startCount = parseInt(params['startCount'], 10);
-      this.cards = new Array(startCount).fill(1).map((pos, index) => 'start' + (pos + index));
+      this._fillCards(startCount);
+    }
+    if (params['resetCount']) {
+      const resetCount = parseInt(params['resetCount'], 10);
+      interval(2000).pipe(take(1)).subscribe(() => this._fillCards(resetCount));
     }
     if (params['position']) {
       this.position = parseInt(params['position'], 10);
@@ -56,6 +60,10 @@ export class TestComponent implements OnInit, DoCheck {
 
   ngDoCheck() {
     this.doChecks++;
+  }
+
+  private _fillCards(count) {
+    this.cards = new Array(count).fill(1).map((pos, index) => 'start' + (pos + index));
   }
 
   loading =

@@ -67,4 +67,25 @@ export class TestSpecs {
       browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(page.expectedItemCount()));
     });
   }
+
+  static testResetStatic(page: TestPage) {
+    it('should show the reseted items', () => {
+      page.step = 0;
+      page.position = 5;
+      page.startCount = 5;
+      page.resetCount = 3;
+      page.navigateTo();
+      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(of(3).toPromise()));
+    });
+  }
+
+  static testResetDynamic(page: TestPage) {
+    it('should fill page after a reset', () => {
+      page.step = 1;
+      page.startCount = 5;
+      page.resetCount = 3;
+      page.navigateTo();
+      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(page.expectedItemCount()));
+    });
+  }
 }
