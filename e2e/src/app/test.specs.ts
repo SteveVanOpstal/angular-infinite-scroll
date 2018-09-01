@@ -6,86 +6,95 @@ import {of} from 'rxjs';
 import {TestPage} from './test.page';
 
 export class TestSpecs {
-  static testFillsPage(page: TestPage) {
-    it('should fill the page with items', () => {
-      page.startCount = 3;
-      page.step = 1;
-      page.navigateTo();
-      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(page.expectedItemCount()));
+  public page = new TestPage('');
+
+  testFillsPage() {
+    it('should fill the page/container with items', () => {
+      this.page.startCount = 3;
+      this.page.step = 1;
+      this.page.navigateTo();
+      this._expect(this.page.full());
     });
   }
 
-  static testStepZero(page: TestPage) {
+  testStepZero() {
     it('should not show any items when step is zero', () => {
-      page.step = 0;
-      page.navigateTo();
-      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(of(0).toPromise()));
+      this.page.step = 0;
+      this.page.navigateTo();
+      this._expect(0);
     });
   }
 
-  static testStepFive(page: TestPage) {
+  testStepFive() {
     it('should show multitudes of five when step is five', () => {
-      page.step = 5;
-      page.navigateTo();
-      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(page.expectedItemCount(5)));
+      this.page.step = 5;
+      this.page.navigateTo();
+      this._expect(this.page.full());
     });
   }
 
-  static testInitialPosition(page: TestPage) {
+  testInitialPosition() {
     it('should show initial items at the initial position', () => {
-      page.startCount = 3;
-      page.position = 3;
-      page.step = 0;
-      page.navigateTo();
-      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(of(3).toPromise()));
+      this.page.startCount = 3;
+      this.page.position = 3;
+      this.page.step = 0;
+      this.page.navigateTo();
+      this._expect(3);
     });
   }
 
-  static testEndOnce(page: TestPage) {
+  testEndOnce() {
     it('should show one item when `end` runs once', () => {
-      page.step = 1;
-      page.endIterations = 1;
-      page.navigateTo();
-      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(of(1).toPromise()));
+      this.page.step = 1;
+      this.page.endIterations = 1;
+      this.page.navigateTo();
+      this._expect(1);
     });
   }
 
-  static testOffset(page: TestPage) {
+  testOffset() {
     it('should be able to handle offset', () => {
-      page.step = 1;
-      page.offset = 100;
-      page.navigateTo();
-      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(page.expectedItemCount()));
+      this.page.step = 1;
+      this.page.offset = 100;
+      this.page.navigateTo();
+      this._expect(this.page.full());
     });
   }
 
-  static testNegativeOffset(page: TestPage) {
+  testNegativeOffset() {
     it('should be able to handle negative offset', () => {
-      page.step = 1;
-      page.offset = -100;
-      page.navigateTo();
-      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(page.expectedItemCount()));
+      this.page.step = 1;
+      this.page.offset = -100;
+      this.page.navigateTo();
+      this._expect(this.page.full());
     });
   }
 
-  static testResetStatic(page: TestPage) {
+  testResetStatic() {
     it('should show the reseted items', () => {
-      page.step = 0;
-      page.position = 5;
-      page.startCount = 5;
-      page.resetCount = 3;
-      page.navigateTo();
-      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(of(3).toPromise()));
+      this.page.step = 0;
+      this.page.position = 5;
+      this.page.startCount = 5;
+      this.page.resetCount = 3;
+      this.page.navigateTo();
+      this._expect(3);
     });
   }
 
-  static testResetDynamic(page: TestPage) {
-    it('should fill page after a reset', () => {
-      page.step = 1;
-      page.startCount = 5;
-      page.resetCount = 3;
-      page.navigateTo();
-      browser.wait(() => page.ready().toPromise()).then(() => expect(page.getCards().count()).toEqual(page.expectedItemCount()));
+  testResetDynamic() {
+    it('should fill the page/container after a reset', () => {
+      this.page.step = 1;
+      this.page.startCount = 5;
+      this.page.resetCount = 3;
+      this.page.navigateTo();
+      this._expect(this.page.full());
     });
+  }
+
+  private _expect(count: number|Promise<number>) {
+    if (typeof count === 'number') {
+      count = of(count).toPromise();
+    }
+    browser.wait(() => this.page.ready().toPromise()).then(() => expect(this.page.getCards().count()).toEqual(count));
   }
 }

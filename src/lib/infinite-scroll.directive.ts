@@ -1,7 +1,9 @@
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {NgForOfContext} from '@angular/common';
-import {Directive, Input, IterableDiffers, NgIterable, OnDestroy, OnInit} from '@angular/core';
+import {Directive, ElementRef, Input, IterableDiffers, NgIterable, OnDestroy, OnInit} from '@angular/core';
 import {NgZone, TemplateRef, TrackByFunction, ViewContainerRef} from '@angular/core';
 import {Observable} from 'rxjs';
+
 import {DEFAULTS} from './defaults';
 import {InfiniteScroll} from './infinite-scroll';
 
@@ -13,8 +15,10 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
   private _dummies = 0;
   private _outOfItems = false;
 
-  constructor(viewContainer: ViewContainerRef, templateRef: TemplateRef<NgForOfContext<T>>, differs: IterableDiffers, zone: NgZone) {
-    super(differs, zone);
+  constructor(
+      viewContainer: ViewContainerRef, templateRef: TemplateRef<NgForOfContext<T>>, differs: IterableDiffers, zone: NgZone,
+      elementRef: ElementRef, scrollDispatcher: ScrollDispatcher) {
+    super(differs, zone, elementRef, scrollDispatcher);
     this.createNgFor(viewContainer, templateRef);
   }
 

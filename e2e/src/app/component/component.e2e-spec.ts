@@ -3,15 +3,19 @@ import {TestSpecs} from '../test.specs';
 import {ComponentPage} from './component.e2e-page';
 
 describe('Component', () => {
-  let page = new ComponentPage();
+  let testSpecs = new TestSpecs();
 
-  TestSpecs.testFillsPage(page);
-  TestSpecs.testStepZero(page);
-  TestSpecs.testStepFive(page);
-  TestSpecs.testInitialPosition(page);
-  TestSpecs.testEndOnce(page);
-  TestSpecs.testOffset(page);
-  TestSpecs.testNegativeOffset(page);
-  TestSpecs.testResetStatic(page);
-  TestSpecs.testResetDynamic(page);
+  beforeEach(() => {
+    testSpecs.page = new ComponentPage();
+  });
+
+  testSpecs.testFillsPage();
+  testSpecs.testStepZero();
+  testSpecs.testStepFive();
+  testSpecs.testInitialPosition();
+  testSpecs.testEndOnce();
+  testSpecs.testOffset();
+  testSpecs.testNegativeOffset();
+  testSpecs.testResetStatic();
+  testSpecs.testResetDynamic();
 });

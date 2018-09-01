@@ -10,18 +10,21 @@ import {InfiniteScrollModule} from '../../../src/public_api';
 import {AppComponent} from './app.component';
 import {CardComponent} from './card/card.component';
 import {ComponentTestComponent} from './component/component.test-component';
-import {DirectiveTemplateTestComponent} from './directive/directive-template.test-component';
+import {ContainerTestComponent} from './container/container.test-component';
+import {DirectiveTemplateTestComponent} from './directive-template/directive-template.test-component';
 import {DirectiveTestComponent} from './directive/directive.test-component';
 import {StatusComponent} from './status.component';
 
 const ROUTES = [
   {path: 'directive-template', component: DirectiveTemplateTestComponent}, {path: 'directive', component: DirectiveTestComponent},
-  {path: 'component', component: ComponentTestComponent}
+  {path: 'component', component: ComponentTestComponent}, {path: 'container', component: ContainerTestComponent}
 ];
 
 @NgModule({
-  declarations:
-      [AppComponent, CardComponent, StatusComponent, DirectiveTestComponent, DirectiveTemplateTestComponent, ComponentTestComponent],
+  declarations: [
+    AppComponent, CardComponent, StatusComponent, DirectiveTestComponent, DirectiveTemplateTestComponent, ComponentTestComponent,
+    ContainerTestComponent
+  ],
   imports: [
     BrowserModule, InfiniteScrollModule, RouterModule.forRoot(ROUTES), MatSnackBarModule, NoopAnimationsModule, MatProgressSpinnerModule
   ],

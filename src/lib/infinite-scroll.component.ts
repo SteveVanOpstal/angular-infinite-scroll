@@ -1,3 +1,4 @@
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {NgForOfContext} from '@angular/common';
 import {AfterContentInit, Component, Input, IterableDiffers, NgIterable, NgZone, OnChanges, SimpleChanges, ViewChild, ViewContainerRef} from '@angular/core';
 import {ContentChild, ContentChildren, Directive, QueryList, TemplateRef} from '@angular/core';
@@ -41,8 +42,8 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
   private _dummies = 0;
   private _outOfItems = false;
 
-  constructor(differs: IterableDiffers, zone: NgZone) {
-    super(differs, zone);
+  constructor(differs: IterableDiffers, zone: NgZone, elementRef: ElementRef, scrollDispatcher: ScrollDispatcher) {
+    super(differs, zone, elementRef, scrollDispatcher);
   }
 
   @Input('position')

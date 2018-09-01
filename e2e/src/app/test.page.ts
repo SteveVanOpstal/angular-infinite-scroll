@@ -5,50 +5,48 @@ import {DEFAULTS} from '../../../src/lib/defaults';
 
 export class TestPage {
   private _offset = DEFAULTS.OFFSET;
-
-  private _locationWithParams = this._location;
+  private _step = DEFAULTS.STEP;
 
   constructor(private _location: string) {
     this.setBrowserHeight(400);
   }
 
   set startCount(startCount: number) {
-    this._locationWithParams = this.addParam(this._locationWithParams, 'startCount', startCount);
+    this._location = this.addParam(this._location, 'startCount', startCount);
   }
 
   set resetCount(resetCount: number) {
-    this._locationWithParams = this.addParam(this._locationWithParams, 'resetCount', resetCount);
+    this._location = this.addParam(this._location, 'resetCount', resetCount);
   }
 
   set position(position: number) {
-    this._locationWithParams = this.addParam(this._locationWithParams, 'position', position);
+    this._location = this.addParam(this._location, 'position', position);
   }
 
   set step(step: number) {
-    this._locationWithParams = this.addParam(this._locationWithParams, 'step', step);
+    this._step = step;
+    this._location = this.addParam(this._location, 'step', step);
   }
 
   set offset(offset: number) {
     this._offset = offset;
-    this._locationWithParams = this.addParam(this._locationWithParams, 'offset', offset);
+    this._location = this.addParam(this._location, 'offset', offset);
   }
 
   set delay(delay: number) {
-    this._locationWithParams = this.addParam(this._locationWithParams, 'delay', delay);
+    this._location = this.addParam(this._location, 'delay', delay);
   }
 
   set endDelay(endDelay: number) {
-    this._locationWithParams = this.addParam(this._locationWithParams, 'endDelay', endDelay);
+    this._location = this.addParam(this._location, 'endDelay', endDelay);
   }
 
   set endIterations(endIterations: number) {
-    this._locationWithParams = this.addParam(this._locationWithParams, 'endIterations', endIterations);
+    this._location = this.addParam(this._location, 'endIterations', endIterations);
   }
 
   navigateTo() {
-    const location = this._locationWithParams;
-    this._locationWithParams = this._location;
-    return browser.get(location);
+    return browser.get(this._location);
   }
 
 
@@ -69,9 +67,13 @@ export class TestPage {
         .pipe(map((result) => parseInt(<string>result, 10)));
   }
 
-  expectedItemCount(round = 1) {
+  /**
+   * Calculates how many items a full page/container should contain.
+   * Takes into account `offset` and `step`.
+   */
+  full() {
     return combineLatest(this.getViewportHeight(), this.getCardHeight())
-        .pipe(map(([viewportHeight, height]) => Math.ceil(((viewportHeight + this._offset) / height) / round) * round))
+        .pipe(map(([viewportHeight, height]) => Math.ceil(((viewportHeight + this._offset + 1) / height) / this._step) * this._step))
         .toPromise();
   }
 

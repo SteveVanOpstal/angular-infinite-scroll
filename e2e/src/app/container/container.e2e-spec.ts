@@ -1,12 +1,12 @@
 import {TestSpecs} from '../test.specs';
 
-import {DirectivePage} from './directive.e2e-page';
+import {ContainerPage} from './container.e2e-page';
 
-describe('Directive', () => {
+describe('Container', () => {
   let testSpecs = new TestSpecs();
 
   beforeEach(() => {
-    testSpecs.page = new DirectivePage();
+    testSpecs.page = new ContainerPage();
   });
 
   testSpecs.testFillsPage();
