@@ -97,7 +97,7 @@ export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
     }
   }
 
-  private destroy(subscription: Subscription) {
+  protected destroy(subscription: Subscription) {
     if (subscription && !subscription.closed) {
       subscription.unsubscribe();
     }

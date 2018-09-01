@@ -1,8 +1,8 @@
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {NgForOfContext} from '@angular/common';
-import {AfterContentInit, Component, Input, IterableDiffers, NgIterable, NgZone, OnChanges, SimpleChanges, ViewChild, ViewContainerRef} from '@angular/core';
-import {ContentChild, ContentChildren, Directive, QueryList, TemplateRef} from '@angular/core';
-import {Observable} from 'rxjs';
+import {AfterContentInit, Component, Input, IterableDiffers, NgIterable, NgZone, ViewChild, ViewContainerRef} from '@angular/core';
+import {ContentChild, ContentChildren, Directive, ElementRef, OnDestroy, QueryList, TemplateRef} from '@angular/core';
+import {Observable, Subscription} from 'rxjs';
 
 import {DEFAULTS} from './defaults';
 import {InfiniteScroll} from './infinite-scroll';
@@ -30,7 +30,7 @@ export class InfiniteTemplateMarker<T> {
       <ng-container *ngTemplateOutlet="templateMarker.template; context: {$implicit: item}"></ng-container>
     </ng-template>`
 })
-export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements AfterContentInit, OnChanges {
+export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements AfterContentInit, OnDestroy {
   @ContentChildren(InfiniteStaticMarker) staticMarkers: QueryList<InfiniteStaticMarker<T>>;
   @ContentChild(InfiniteTemplateMarker) templateMarker: InfiniteTemplateMarker<T>;
   @ViewChild('dynamic') dynamicTemplate: ViewContainerRef;
@@ -38,6 +38,7 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
   itemsStatic: Array<InfiniteStaticMarker<T>>;
   items: Array<T>;
 
+  private _subscriptionStaticMarkersChanges: Subscription;
   private _positionInitial = DEFAULTS.POSITION;
   private _dummies = 0;
   private _outOfItems = false;
@@ -69,12 +70,11 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
 
   ngAfterContentInit() {
     this.initItems();
+    this._subscriptionStaticMarkersChanges = this.staticMarkers.changes.subscribe(this.initItems.bind(this));
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.staticMarkers) {
-      this.initItems();
-    }
+  ngOnDestroy() {
+    this.destroy(this._subscriptionStaticMarkersChanges);
   }
 
   protected update() {
