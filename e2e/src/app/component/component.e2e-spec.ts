@@ -12,4 +12,6 @@ describe('Component', () => {
   TestSpecs.testEndOnce(page);
   TestSpecs.testOffset(page);
   TestSpecs.testNegativeOffset(page);
+  TestSpecs.testResetStatic(page);
+  TestSpecs.testResetDynamic(page);
 });
