@@ -27,8 +27,8 @@ export class InfiniteTemplateMarker<T> {
       </ng-template>
     </ng-template>
     <ng-template [ngIf]="templateMarker">
-    <ng-template ngFor let-item [ngForOf]="items">
-      <ng-container *ngTemplateOutlet="templateMarker.template; context: {$implicit: item}"></ng-container>
+      <ng-template ngFor let-item [ngForOf]="items">
+        <ng-container *ngTemplateOutlet="templateMarker.template; context: {$implicit: item}"></ng-container>
       </ng-template>
     </ng-template>`
 })
@@ -92,7 +92,7 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
       staticLength = this.itemsStatic.length
     }
 
-    if (this.position < staticLength) {
+    if (this.position <= staticLength) {
       this.loading$.next(true);
       this._updateAfterRender$.next();
       this.updateItems();
