@@ -13,6 +13,8 @@ export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
   private _userEnd$ = new Observable<NgIterable<T>>();
   private _scrollContainers: CdkScrollable[] = undefined;
 
+  items: Array<T>;
+
   protected _subscriptionEnd: Subscription;
   protected _subscriptionUpdateAfterRender: Subscription;
 
@@ -20,6 +22,10 @@ export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
   protected _updateAfterRender$ = new Subject<any>();
 
   protected _ngFor;
+  
+  protected _positionInitial = DEFAULTS.POSITION;
+  protected _dummies = 0;
+  protected _outOfItems = false;
 
   constructor(
       private _differs: IterableDiffers, public zone: NgZone, private _elementRef: ElementRef,
@@ -68,7 +74,7 @@ export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
   protected subscribeEnd(scrollEnd: (position: number, interval: number) => Observable<NgIterable<T>>) {
     this.destroy(this._subscriptionEnd);
     this._userEnd$ = this._end$.pipe(exhaustMap(() => scrollEnd(this.position, this.step)));
-    this._subscriptionEnd = this._userEnd$.subscribe(this.newItems.bind(this), () => this.newItems.bind(this)([]));
+    this._subscriptionEnd = this._userEnd$.subscribe(this._newItems.bind(this), () => this._newItems.bind(this)([]));
   }
 
   private _update(scrollContainer: CdkScrollable|void|undefined = undefined) {
@@ -105,5 +111,35 @@ export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
 
   protected abstract update();
 
-  protected abstract newItems(newItems: NgIterable<T>);
+  protected addDummies() {
+    this.zone.run(() => {
+      if (!this._dummies && !this._outOfItems) {
+        this.items = this.items.concat(Array(this.step).fill(undefined));
+        this._dummies += this.step;
+      }
+    });
+  }
+
+  protected removeDummies() {
+    while (this._dummies > 0) {
+      if (this.items.length) {
+        this.items.pop();
+      }
+      this._dummies--;
+    }
+  }
+
+  private _newItems(newItems: NgIterable<T>) {
+    this.removeDummies();
+    const newItemsArray = Array.from(newItems);
+    this.zone.run(() => {
+      this.items = this.items.concat(newItemsArray);
+    });
+    // only continue when newItems arrive
+    if (newItemsArray.length) {
+      this._updateAfterRender$.next();
+    } else {
+      this._outOfItems = true;
+    }
+  }
 }

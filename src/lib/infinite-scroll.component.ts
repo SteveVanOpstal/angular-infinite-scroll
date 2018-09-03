@@ -36,12 +36,8 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
   @ViewChild('dynamic') dynamicTemplate: ViewContainerRef;
 
   itemsStatic: Array<InfiniteStaticMarker<T>>;
-  items: Array<T>;
 
   private _subscriptionStaticMarkersChanges: Subscription;
-  private _positionInitial = DEFAULTS.POSITION;
-  private _dummies = 0;
-  private _outOfItems = false;
 
   constructor(differs: IterableDiffers, zone: NgZone, elementRef: ElementRef, scrollDispatcher: ScrollDispatcher) {
     super(differs, zone, elementRef, scrollDispatcher);
@@ -111,25 +107,6 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
     }
   }
 
-  protected newItems(newItems: NgIterable<T>) {
-    while (this._dummies > 0) {
-      if (this.items.length) {
-        this.items.pop();
-      }
-      this._dummies--;
-    }
-    const newItemsArray = Array.from(newItems);
-    this.zone.run(() => {
-      this.items = this.items.concat(newItemsArray);
-    });
-    // only continue when newItems arrive
-    if (newItemsArray.length) {
-      this._updateAfterRender$.next();
-    } else {
-      this._outOfItems = true;
-    }
-  }
-
   private initItems() {
     this.itemsStatic = this.staticMarkers.toArray();
     this.position = this._positionInitial;
@@ -143,15 +120,6 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
     this.zone.run(() => {
       for (const index in this.itemsStatic) {
         this.itemsStatic[index].enabled = this.position > parseInt(index, 10);
-      }
-    });
-  }
-
-  private addDummies() {
-    this.zone.run(() => {
-      if (!this._dummies && !this._outOfItems) {
-        this.items = this.items.concat(Array(this.step).fill(undefined));
-        this._dummies += this.step;
       }
     });
   }
