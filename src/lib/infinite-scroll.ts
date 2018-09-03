@@ -22,7 +22,7 @@ export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
   protected _updateAfterRender$ = new Subject<any>();
 
   protected _ngFor;
-  
+
   protected _positionInitial = DEFAULTS.POSITION;
   protected _dummies = 0;
   protected _outOfItems = false;
@@ -87,12 +87,8 @@ export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
         container = scrollContainer;
       }
       const element = container.getElementRef().nativeElement;
-      const style = window.getComputedStyle(element);
-      const preChangeHeight = style.height;
-      element.style.height = 'auto';
-      const clientHeight = element.clientHeight;
-      element.style.height = preChangeHeight;
-      this._updateWhenOffsetExceeded(element.offsetHeight + element.scrollTop, clientHeight);
+      const scrollHeight = element.scrollHeight <= element.offsetHeight ? 0 : element.scrollHeight;
+      this._updateWhenOffsetExceeded(element.offsetHeight + element.scrollTop, scrollHeight);
     }
   }
 
