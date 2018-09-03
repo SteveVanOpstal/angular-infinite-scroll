@@ -26,8 +26,10 @@ export class InfiniteTemplateMarker<T> {
         <ng-container *ngTemplateOutlet="item.template"></ng-container>
       </ng-template>
     </ng-template>
+    <ng-template [ngIf]="templateMarker">
     <ng-template ngFor let-item [ngForOf]="items">
       <ng-container *ngTemplateOutlet="templateMarker.template; context: {$implicit: item}"></ng-container>
+      </ng-template>
     </ng-template>`
 })
 export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements AfterContentInit, OnDestroy {
