@@ -101,7 +101,7 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
       this.position += this.step;
     } else if (this._subscriptionEnd) {
       this.loading$.next(true);
-      this._end$.next();
+      this._end$.next({position: this.position, step: this.step});
       this.addDummies();
       this.position += this.step;
     }

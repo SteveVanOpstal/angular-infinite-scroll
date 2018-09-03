@@ -78,7 +78,7 @@ export class InfiniteScrollDirective<T> extends InfiniteScroll<T> implements OnI
       this.position += this.step;
     } else if (this._subscriptionEnd) {
       this.loading$.next(true);
-      this._end$.next();
+      this._end$.next({position: this.position, step: this.step});
       this.position += this.step;
       this.addDummies();
       this.updateItems();

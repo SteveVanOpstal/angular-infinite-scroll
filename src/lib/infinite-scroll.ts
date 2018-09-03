@@ -2,7 +2,7 @@ import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {NgForOf, NgForOfContext} from '@angular/common';
 import {DoCheck, ElementRef, IterableDiffers, NgIterable, NgZone, OnDestroy, OnInit, TemplateRef, ViewContainerRef} from '@angular/core';
 import {BehaviorSubject, interval, merge, Observable, Subject, Subscription} from 'rxjs';
-import {exhaustMap, switchMap, take} from 'rxjs/operators';
+import {distinctUntilChanged, mergeMap, share, switchMap, take} from 'rxjs/operators';
 
 import {DEFAULTS} from './defaults';
 
@@ -18,7 +18,7 @@ export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
   protected _subscriptionEnd: Subscription;
   protected _subscriptionUpdateAfterRender: Subscription;
 
-  protected _end$ = new Subject<NgIterable<T>>();
+  protected _end$ = new Subject<{position: number, step: number}>();
   protected _updateAfterRender$ = new Subject<any>();
 
   protected _ngFor;
@@ -73,7 +73,8 @@ export abstract class InfiniteScroll<T> implements OnInit, DoCheck, OnDestroy {
 
   protected subscribeEnd(scrollEnd: (position: number, interval: number) => Observable<NgIterable<T>>) {
     this.destroy(this._subscriptionEnd);
-    this._userEnd$ = this._end$.pipe(exhaustMap(() => scrollEnd(this.position, this.step)));
+    this._userEnd$ = this._end$.pipe(
+        distinctUntilChanged((x, y) => x.position === y.position), mergeMap(({position, step}) => scrollEnd(position, step)), share());
     this._subscriptionEnd = this._userEnd$.subscribe(this._newItems.bind(this), () => this._newItems.bind(this)([]));
   }
 
