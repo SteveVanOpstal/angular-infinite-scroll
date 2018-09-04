@@ -3,7 +3,7 @@
   "version": "3.1.1",
   "license": "GPL-3.0",
   "scripts": {
-    "format": "npm run clang-format -- --glob=\"@(src|e2e|examples)/**/*.@(ts|js)\" -i",
+    "format": "npm run clang-format -- --glob=\"@(src|docs|e2e)/**/*.@(ts|js)\" -i",
     "build": "ng build --prod",
     "serve": "ng serve angular-infinite-scroll-docs --ssl --ssl-key secure/cert.key --ssl-cert secure/cert.pem",
     "serve:docs": "npm run serve",

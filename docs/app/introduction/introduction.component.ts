@@ -4,7 +4,7 @@ import {Component} from '@angular/core';
   selector: 'docs-intro',
   styleUrls: ['./introduction.component.scss'],
   template: `
-    <p>Infinite Scroll directive and component for Angular</p>`
+    <p>Infinite Scroll for Angular 6+</p>`
 })
 export class IntroductionComponent {
 }

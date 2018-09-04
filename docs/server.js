@@ -39,11 +39,7 @@ function requestCard(response, begin, end) {
   }
 
   for (let index = begin; index <= end; index++) {
-    result.push({
-      id: index,
-      image: `https://picsum.photos/30/30/?random`,
-      title: chance.sentence({words: 5})
-    });
+    result.push({id: index, image: `https://picsum.photos/30/30/?random`, title: chance.sentence({words: 5})});
   }
 
   response.write(JSON.stringify(result));

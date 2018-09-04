@@ -5,8 +5,16 @@ import {version} from '../../package';
   selector: 'docs-header',
   styleUrls: ['./header.component.scss'],
   template: `
-    <h1>angular-infinite-scroll</h1>
-    <p>{{ version }}</p>`
+    <h1>
+      <a href="https://github.com/SteveVanOpstal/angular-infinite-scroll">
+        angular-infinite-scroll
+      </a>
+    </h1>
+    <p>
+      <a href="https://github.com/SteveVanOpstal/angular-infinite-scroll/blob/master/CHANGELOG.md">
+        {{ version }}
+      </a>
+    </p>`
 })
 export class HeaderComponent {
   version = version;
