@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {interval, Observable} from 'rxjs';
-import {map, take} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +10,9 @@ import {map, take} from 'rxjs/operators';
 export class AppComponent {
   cards;
 
-  end = (position: number, step: number): Observable<Array<any>> => {
-    return interval(200).pipe(take(1), map(() => new Array(step).fill(position).map((pos, index) => pos + index + 1)));
+  constructor(private http: HttpClient) {}
+
+  end = (position: number, step: number): Observable<any> => {
+    return this.http.get(`https://localhost:4200/backend/card?begin=${position}&end=${position + step - 1}`);
   }
 }

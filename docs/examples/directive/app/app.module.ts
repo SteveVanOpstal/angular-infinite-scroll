@@ -6,7 +6,8 @@ import {AppComponent} from './app.component';
 import {CardComponent} from './card/card.component';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
-@NgModule({declarations: [AppComponent, CardComponent], imports: [BrowserModule, CommonModule, InfiniteScrollModule], bootstrap: [AppComponent]})
+@NgModule({declarations: [AppComponent, CardComponent], imports: [BrowserModule, CommonModule, HttpClientModule, InfiniteScrollModule], bootstrap: [AppComponent]})
 export class AppModule {
 }
