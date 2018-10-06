@@ -8,7 +8,7 @@ export class ContainerPage extends TestPage {
   }
 
   getViewportHeight(): Observable<number> {
-    // fixed infiniteScrollContainer height of 300px (ContainerTestComponent -> styles -> div)
+    // fixed infiniteContainer height of 300px (ContainerTestComponent -> styles -> div)
     return of(300);
   }
 }

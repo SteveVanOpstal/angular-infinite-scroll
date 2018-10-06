@@ -81,7 +81,10 @@ export class TestComponent implements OnInit, DoCheck {
           return of([]);
         }
         this.endIterationCount++;
-        return interval(this.endDelay).pipe(take(1), map(() => new Array(step).fill(position).map((pos, index) => pos + index + 1)));
+        return interval(this.endDelay)
+            .pipe(
+                take(1),
+                map(() => new Array(step).fill(position).map((pos, index) => pos + index + 1)));
       }
 
   private updateStatus() {
@@ -90,6 +93,10 @@ export class TestComponent implements OnInit, DoCheck {
   }
 
   private get status() {
-    return {loading: this.loadingState, loadingCycles: this.loadingCycles, doChecks: this.doChecks.toString()};
+    return {
+      loading: this.loadingState,
+      loadingCycles: this.loadingCycles,
+      doChecks: this.doChecks.toString()
+    };
   }
 }

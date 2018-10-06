@@ -16,17 +16,20 @@ import {DirectiveTestComponent} from './directive/directive.test-component';
 import {StatusComponent} from './status.component';
 
 const ROUTES = [
-  {path: 'directive-template', component: DirectiveTemplateTestComponent}, {path: 'directive', component: DirectiveTestComponent},
-  {path: 'component', component: ComponentTestComponent}, {path: 'container', component: ContainerTestComponent}
+  {path: 'directive-template', component: DirectiveTemplateTestComponent},
+  {path: 'directive', component: DirectiveTestComponent},
+  {path: 'component', component: ComponentTestComponent},
+  {path: 'container', component: ContainerTestComponent}
 ];
 
 @NgModule({
   declarations: [
-    AppComponent, CardComponent, StatusComponent, DirectiveTestComponent, DirectiveTemplateTestComponent, ComponentTestComponent,
-    ContainerTestComponent
+    AppComponent, CardComponent, StatusComponent, DirectiveTestComponent,
+    DirectiveTemplateTestComponent, ComponentTestComponent, ContainerTestComponent
   ],
   imports: [
-    BrowserModule, InfiniteScrollModule, RouterModule.forRoot(ROUTES), MatSnackBarModule, NoopAnimationsModule, MatProgressSpinnerModule
+    BrowserModule, InfiniteScrollModule, RouterModule.forRoot(ROUTES), MatSnackBarModule,
+    NoopAnimationsModule, MatProgressSpinnerModule
   ],
   bootstrap: [AppComponent],
   entryComponents: [StatusComponent]

@@ -7,8 +7,8 @@ import {TestComponent} from '../test.component';
 @Component({
   styles: ['div { overflow-y: scroll; height: 300px }'],
   template: `
-    <div infiniteScrollContainer>
-      <e2e-card *infiniteScroll="let card of cards; position: position; step: step; delay: delay; offset: offset; end: end; loading: loading"
+    <div infiniteContainer>
+      <e2e-card *infiniteFor="let card of cards; position: position; step: step; delay: delay; offset: offset; end: end; loading: loading"
                 [card]="card">
       </e2e-card>
     </div>`
