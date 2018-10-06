@@ -25,6 +25,12 @@
       ],
       "angular-infinite-scroll/*": [
         "src/lib/*"
+      ],
+      "angular-infinite-scroll-examples": [
+        "examples/public_api"
+      ],
+      "angular-infinite-scroll-examples/*": [
+        "examples/*"
       ]
     }
   }

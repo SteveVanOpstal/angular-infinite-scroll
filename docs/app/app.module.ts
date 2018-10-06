@@ -1,22 +1,20 @@
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {HttpClientModule} from '@angular/common/http';
-import {RouterModule} from '@angular/router';
 import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
+import {InfiniteScrollModule} from 'angular-infinite-scroll';
 
 import {AppComponent} from './app.component';
-import { InfiniteScrollModule } from '../../src/public_api';
-import { HeaderComponent } from './header/header.component';
-import { IntroductionComponent } from './introduction/introduction.component';
-import { EmbedComponent } from './embed/embed.component';
+import {ExampleModule} from './examples/example.module';
+import {HeaderComponent} from './header/header.component';
+import {IntroductionComponent} from './introduction/introduction.component';
 
-
-// import {AppComponent as DirectiveComponent} from '../examples/directive/app/app.component';
-
-const ROUTES = [{
-  path: '', loadChildren: './examples/directive.module#DirectiveModule'//, outlet: 'directive'
-}];
-
-@NgModule({declarations: [AppComponent, HeaderComponent, IntroductionComponent, EmbedComponent], 
-  imports: [BrowserModule, RouterModule.forRoot(ROUTES), HttpClientModule, InfiniteScrollModule], bootstrap: [AppComponent]})
+@NgModule({
+  declarations: [AppComponent, HeaderComponent, IntroductionComponent],
+  imports:
+      [BrowserModule, BrowserAnimationsModule, CommonModule, InfiniteScrollModule, ExampleModule],
+  bootstrap: [AppComponent]
+})
 export class AppModule {
 }

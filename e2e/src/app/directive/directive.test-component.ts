@@ -5,7 +5,7 @@ import {TestComponent} from '../test.component';
 
 @Component({
   template: `
-    <e2e-card *infiniteScroll="let card of cards; position: position; step: step; delay: delay; offset: offset; end: end; loading: loading"
+    <e2e-card *infiniteFor="let card of cards; position: position; step: step; delay: delay; offset: offset; end: end; loading: loading"
               [card]="card">
     </e2e-card>`,
 })

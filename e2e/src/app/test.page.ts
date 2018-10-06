@@ -73,7 +73,10 @@ export class TestPage {
    */
   full() {
     return combineLatest(this.getViewportHeight(), this.getCardHeight())
-        .pipe(map(([viewportHeight, height]) => Math.ceil(((viewportHeight + this._offset + 1) / height) / this._step) * this._step))
+        .pipe(
+            map(([viewportHeight, height]) =>
+                    Math.ceil(((viewportHeight + this._offset + 1) / height) / this._step) *
+                    this._step))
         .toPromise();
   }
 

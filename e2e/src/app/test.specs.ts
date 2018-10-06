@@ -95,6 +95,7 @@ export class TestSpecs {
     if (typeof count === 'number') {
       count = of(count).toPromise();
     }
-    browser.wait(() => this.page.ready().toPromise()).then(() => expect(this.page.getCards().count()).toEqual(count));
+    browser.wait(() => this.page.ready().toPromise())
+        .then(() => expect(this.page.getCards().count()).toEqual(<Promise<number>>count));
   }
 }

@@ -1,6 +1,6 @@
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {NgForOfContext} from '@angular/common';
-import {AfterContentInit, Component, Input, IterableDiffers, NgIterable, NgZone, ViewChild, ViewContainerRef} from '@angular/core';
+import {AfterContentInit, Component, Input, NgIterable, NgZone, ViewChild, ViewContainerRef} from '@angular/core';
 import {ContentChild, ContentChildren, Directive, ElementRef, OnDestroy, QueryList, TemplateRef} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 
@@ -26,25 +26,24 @@ export class InfiniteTemplateMarker<T> {
         <ng-container *ngTemplateOutlet="item.template"></ng-container>
       </ng-template>
     </ng-template>
-    <ng-template ngFor let-item [ngForOf]="items">
-      <ng-container *ngTemplateOutlet="templateMarker.template; context: {$implicit: item}"></ng-container>
+    <ng-template [ngIf]="templateMarker">
+      <ng-template ngFor let-item [ngForOf]="items">
+        <ng-container *ngTemplateOutlet="templateMarker.template; context: {$implicit: item}"></ng-container>
+      </ng-template>
     </ng-template>`
 })
-export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements AfterContentInit, OnDestroy {
+export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements AfterContentInit,
+                                                                             OnDestroy {
   @ContentChildren(InfiniteStaticMarker) staticMarkers: QueryList<InfiniteStaticMarker<T>>;
   @ContentChild(InfiniteTemplateMarker) templateMarker: InfiniteTemplateMarker<T>;
   @ViewChild('dynamic') dynamicTemplate: ViewContainerRef;
 
   itemsStatic: Array<InfiniteStaticMarker<T>>;
-  items: Array<T>;
 
   private _subscriptionStaticMarkersChanges: Subscription;
-  private _positionInitial = DEFAULTS.POSITION;
-  private _dummies = 0;
-  private _outOfItems = false;
 
-  constructor(differs: IterableDiffers, zone: NgZone, elementRef: ElementRef, scrollDispatcher: ScrollDispatcher) {
-    super(differs, zone, elementRef, scrollDispatcher);
+  constructor(zone: NgZone, elementRef: ElementRef, scrollDispatcher: ScrollDispatcher) {
+    super(zone, elementRef, scrollDispatcher);
   }
 
   @Input('position')
@@ -70,7 +69,8 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
 
   ngAfterContentInit() {
     this.initItems();
-    this._subscriptionStaticMarkersChanges = this.staticMarkers.changes.subscribe(this.initItems.bind(this));
+    this._subscriptionStaticMarkersChanges =
+        this.staticMarkers.changes.subscribe(this.initItems.bind(this));
   }
 
   ngOnDestroy() {
@@ -83,18 +83,12 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
       this._dummies = 0;
     }
 
-    if (this.items && (!this.items.length || this.items.every((item) => item === undefined))) {
-      this.items = [];
-      this._dummies = 0;
-      this.addDummies();
-    }
-
     let staticLength = 0;
     if (this.itemsStatic) {
       staticLength = this.itemsStatic.length
     }
 
-    if (this.position < staticLength) {
+    if (this.position <= staticLength) {
       this.loading$.next(true);
       this._updateAfterRender$.next();
       this.updateItems();
@@ -105,28 +99,9 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
       this.position += this.step;
     } else if (this._subscriptionEnd) {
       this.loading$.next(true);
-      this._end$.next();
+      this._end$.next({position: this.position, step: this.step});
       this.addDummies();
       this.position += this.step;
-    }
-  }
-
-  protected newItems(newItems: NgIterable<T>) {
-    while (this._dummies > 0) {
-      if (this.items.length) {
-        this.items.pop();
-      }
-      this._dummies--;
-    }
-    const newItemsArray = Array.from(newItems);
-    this.zone.run(() => {
-      this.items = this.items.concat(newItemsArray);
-    });
-    // only continue when newItems arrive
-    if (newItemsArray.length) {
-      this._updateAfterRender$.next();
-    } else {
-      this._outOfItems = true;
     }
   }
 
@@ -139,19 +114,10 @@ export class InfiniteScrollComponent<T> extends InfiniteScroll<T> implements Aft
     this.update();
   }
 
-  private updateItems() {
+  protected updateItems() {
     this.zone.run(() => {
       for (const index in this.itemsStatic) {
         this.itemsStatic[index].enabled = this.position > parseInt(index, 10);
-      }
-    });
-  }
-
-  private addDummies() {
-    this.zone.run(() => {
-      if (!this._dummies && !this._outOfItems) {
-        this.items = this.items.concat(Array(this.step).fill(undefined));
-        this._dummies += this.step;
       }
     });
   }
