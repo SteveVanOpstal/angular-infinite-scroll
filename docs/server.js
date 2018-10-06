@@ -30,16 +30,25 @@ function requestCard(response, begin, end) {
   begin = parseInt(begin, 10);
   end = parseInt(end, 10);
 
-  if (!begin) {
-    begin = 0;
-  }
-
   if (!end) {
     end = begin + 5;
   }
 
-  for (let index = begin; index <= end; index++) {
-    result.push({id: index, image: `https://picsum.photos/30/30/?random`, title: chance.sentence({words: 5})});
+  for (let i = begin; i <= end; i++) {
+    result.push(
+        {id: i, image: `https://picsum.photos/30/30/?random`, title: chance.sentence({words: 5})});
+  }
+
+  response.write(JSON.stringify(result));
+}
+
+function requestCardRandom(response) {
+  const result = [];
+
+  end = chance.integer({min: 3, max: 10});
+
+  for (let i = 0; i <= end; i++) {
+    result.push({image: `https://picsum.photos/30/30/?random`, title: chance.sentence({words: 5})});
   }
 
   response.write(JSON.stringify(result));
@@ -65,7 +74,11 @@ const server = https.createServer(ssl, (request, response) => {
 
   switch (type) {
     case 'card':
-      requestCard(response, path.query.begin, path.query.end);
+      if (path.query.begin) {
+        requestCard(response, path.query.begin, path.query.end);
+      } else {
+        requestCardRandom(response);
+      }
       break;
     default:
       requestNotFound(response);
@@ -75,7 +88,7 @@ const server = https.createServer(ssl, (request, response) => {
   response.end();
 });
 
-const port = 8080;
+const port = 4300;
 if (process.argv.length > 2) {
   port = process.argv[2];
 }

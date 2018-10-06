@@ -1,6 +1,21 @@
 :host {
   display: flex;
-  justify-content: center;
+}
+
+.title {
+  position: relative;
+}
+
+.version {
+  position: absolute;
+  top: 0;
+  right: -36px;
+}
+
+.github {
+  position: absolute;
+  right: 0;
+  margin: 10px;
 }
 
 a {

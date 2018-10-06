@@ -1,0 +1,4 @@
+<div class="card" *infiniteFor="let card of cards; end: end">
+  <img class="avatar" [attr.src]="card?.image" />
+  <p class="title">{{ card?.title }}</p>
+</div>

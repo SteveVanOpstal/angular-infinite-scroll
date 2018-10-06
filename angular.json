@@ -133,7 +133,7 @@
       "root": "",
       "sourceRoot": "docs",
       "projectType": "application",
-      "prefix": "app",
+      "prefix": "docs",
       "schematics": {},
       "architect": {
         "build": {
@@ -225,6 +225,27 @@
             "exclude": [
               "**/node_modules/**"
             ]
+          }
+        }
+      }
+    },
+    "angular-infinite-scroll-examples": {
+      "root": "examples",
+      "sourceRoot": "examples",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "examples/tsconfig.lib.json",
+            "project": "examples/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "examples/ng-package.prod.json"
+            }
           }
         }
       }

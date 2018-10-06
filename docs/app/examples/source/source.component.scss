@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  height: 310px;
+}
+
+.source {
+  margin-bottom: -2px;
+  flex-grow: 1;
+}
+
+.example {
+  min-width: 400px;
+  overflow-y: scroll;
+}
