@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {version} from '../../package';
+import * as pack from '../../../package.json';
 
 @Component({
   selector: 'docs-header',
@@ -24,5 +24,5 @@ import {version} from '../../package';
     </a>`
 })
 export class HeaderComponent {
-  version = version;
+  version = pack.version;
 }
